@@ -1,3 +1,4 @@
+// -*--*--*--*--*--* UMUT YILDIZ 260201028 *--*--*--*--*--*--*-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,7 +43,7 @@ void printHelp();
 // prints command prefix
 void printShell(char *name);
 
-// prints red colored failuRe message
+// prints red colored failure message
 void printFailure(char *message);
 
 // change working directory (built in)
@@ -202,6 +203,7 @@ void printDirectory() {
 }
 
 int getInput(char *input) {
+    strcpy(input, ""); // clear input
     char buffer[MAX_CHAR_COUNT];
     fgets(buffer, MAX_CHAR_COUNT, stdin);
     // if buffer is one letter. This check if user entered empty command.
@@ -309,7 +311,7 @@ void execute(char **parsed, char *isBackground) {
     } else {
         if (!isBackground) {
             // foreground commands need to wait
-            wait(NULL);
+            waitpid(pID, 0, 0);
         }
         return;
     }
@@ -367,5 +369,4 @@ void executePiped(char **parsed, char **parsedPipe) {
         }
     }
 }
-
 // -*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*-
