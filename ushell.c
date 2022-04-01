@@ -86,7 +86,7 @@ int commandHandler(char **parsed);
 void execute(char **parsed, char *isBackground);
 
 // executes general linux commands with pipe
-void executePiped(char **parsed, char **parsedPipe);
+void executePiped(char **parsed, char **parsedPipe, char *isBackground);
 // -*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*--*-
 
 // -*--*--*--*--*--*-- MAIN FUNCTION *--*--*--*--*--*--*--*--*-
@@ -119,7 +119,7 @@ int main() {
         }
         if (isPiped) {
             // execute with pipe
-            executePiped(parsed, parsedPipe);
+            executePiped(parsed, parsedPipe, isBackground);
         } else {
             execute(parsed, isBackground);
         }
@@ -321,7 +321,7 @@ void execute(char **parsed, char *isBackground) {
     }
 }
 
-void executePiped(char **parsed, char **parsedPipe) {
+void executePiped(char **parsed, char **parsedPipe, char *isBackground) {
     int pipe_fd[2];
     pid_t pID1, pID2;
     // establish the pipe
@@ -368,8 +368,11 @@ void executePiped(char **parsed, char **parsedPipe) {
             // close pipe and wait both
             close(pipe_fd[READ_END]);
             close(pipe_fd[WRITE_END]);
-            wait(NULL);
-            wait(NULL);
+            if (!isBackground) {
+                // foreground commands need to wait
+                waitpid(pID1, 0, 0);
+                waitpid(pID2, 0, 0);
+            }
         }
     }
 }
