@@ -107,6 +107,10 @@ int main() {
         }
         // check if contains "&"
         isBackground = strstr(input, "&");
+        if (isBackground) {
+            char *inputWithoutAmpersand = strtok(input, "&");
+            memcpy(input, inputWithoutAmpersand, sizeof(input));
+        }
         // parse command
         int isPiped = processString(input, parsed, parsedPipe);
         // try to execute if built in
